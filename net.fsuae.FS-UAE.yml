@@ -100,8 +100,6 @@ modules:
         url: https://github.com/FrodeSolheim/fs-uae-launcher
         branch: fs-uae-launcher-3.0
         commit: 1112b0c5e39eee419d23a0504810cbbe6190eaca
-      - type: patch
-        path: 0002-fs-uae-launcher-remove-python2.patch
       - type: shell
         commands:
           - sed 's/prefix := .*/prefix := /g' -i ./bootstrap
