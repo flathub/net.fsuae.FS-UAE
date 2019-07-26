@@ -6,26 +6,26 @@ runtime-version: '5.12'
 sdk: org.kde.Sdk
 rename-desktop-file: fs-uae.desktop
 rename-icon: fs-uae
-finish-args: 
+finish-args:
   - --device=all
   - --filesystem=home
   - --share=ipc
   - --share=network
   - --socket=pulseaudio
   - --socket=x11
-modules: 
+modules:
   - name: PyQt5,
     cleanup: [/bin/sip, /include, /lib/python3.7/site-packages/*.pyi]
     config-opts: [--disable-static, --enable-x11]
     buildsystem: simple
-    build-commands: 
+    build-commands:
       - python3 configure.py --confirm-license --no-docstrings --assume-shared --no-sip-files --no-qml-plugin --no-tools --no-qsci-api -d ${FLATPAK_DEST}/lib/python3.7/site-packages --sip=${FLATPAK_DEST}/bin/sip --sip-incdir=${FLATPAK_DEST}/include --stubsdir=${FLATPAK_DEST}/lib/python3.7/site-packages --disable=QtSensors --disable=QtWebEngine --disable=QtQuick --disable=QtQml --disable=QtTest --disable=QtWebChannel --disable=QtWebEngineCore --disable=QWebEngineWidgets --disable=QtQuickWidgets --disable=QtSql --disable=QtXmlPatterns --disable=QtMultimedia --disable=QtMultimediaWidgets --disable=QtLocation --disable=QtDesigner --disable=QtBluetooth --disable=QtWebKit --disable=QtWebKitWidgets --disable=QtNfc --disable=QtPositioning
-      - make -j $(nproc)
+      - make -j $FLATPAK_BUILDER_N_JOBS
       - make install
-    sources: 
+    sources:
       - type: archive
-        url: https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.12.2/PyQt5_gpl-5.12.2.tar.gz
-        sha256: c565829e77dc9c281aa1a0cdf2eddaead4e0f844cbaf7a4408441967f03f5f0f
+        url: https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.12.3/PyQt5_gpl-5.12.3.tar.gz
+        sha256: 0db0fa37debab147450f9e052286f7a530404e2aaddc438e97a7dcdf56292110
     modules:
       - name: sip
         buildsystem: simple
@@ -33,62 +33,63 @@ modules:
           - python3 configure.py --sip-module PyQt5.sip -b ${FLATPAK_DEST}/bin -d ${FLATPAK_DEST}/lib/python3.7/site-packages -e ${FLATPAK_DEST}/include -v ${FLATPAK_DEST}/share/sip --stubsdir=${FLATPAK_DEST}/lib/python3.7/site-packages
           - make
           - make install
-        sources: 
+        sources:
           - type: archive
-            url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.17/sip-4.19.17.tar.gz
-            sha256: 12bcd8f4d5feefc105bc075d12c5090ee783f7380728563c91b8b95d0ec45df3
+            url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.18/sip-4.19.18.tar.gz
+            sha256: c0bd863800ed9b15dcad477c4017cdb73fa805c25908b0240564add74d697e1e
 
   - name: libmpeg2
     cleanup: [ /bin /include /lib/pkgconfig /lib/*.la ]
     config-opts: [ --disable-static ]
     rm-configure: true
-    sources: 
+    sources:
       - type: archive
         url: http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz
         sha256: dee22e893cb5fc2b2b6ebd60b88478ab8556cb3b93f9a0d7ce8f3b61851871d4
       - type: script
         dest-filename: autogen.sh
-        commands: 
+        commands:
           - cp -p /usr/share/automake-*/config.{subguess} .
           - autoreconf -vfi
-  
+
   - name: fs-uae
     skip-arches: [ i386 x86_64 ]
     cleanup: [ /share/man /share/doc ]
     config-opts: [ --disable-jit ]
     no-autogen: true
-    post-install: 
+    post-install:
       - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
       - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
-    sources: 
+    sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae
-        branch: stable
-        commit: 665457ec22500623f6374bef5bada6053057daa3
+        branch: fs-uae-3.0
+        commit: 31239a79b097728aba9ceeef74d2c135cea49e1c
       - type: shell
-        commands: 
+        commands:
           - ./bootstrap
-  
+
   - name: fs-uae-jit
     only-arches: [ i386 x86_64 ]
     cleanup: [ /share/man /share/doc ]
     no-autogen: true
-    post-install: 
+    post-install:
       - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
       - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
-    sources: 
+    sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae
-        branch: stable
-        commit: 665457ec22500623f6374bef5bada6053057daa3
+        branch: fs-uae-3.0
+        commit: 31239a79b097728aba9ceeef74d2c135cea49e1c
       - type: shell
-        commands: 
+        commands:
           - ./bootstrap
+
 
   - name: fs-uae-launcher
     make-install-args: [ DESTDIR=/app ]
     no-autogen: true
-    post-install: 
+    post-install:
       - cp -a /app/share/runtime/applications /app/share/runtime/icons /app/share/
       - mv /app/share/applications/fs-uae-launcher.desktop /app/share/applications/net.fsuae.FS-UAE.Launcher.desktop
       - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/net.fsuae.FS-UAE.Launcher.desktop
@@ -97,21 +98,75 @@ modules:
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae-launcher
-        branch: master
-        commit: 233d2c65e6660ed9c9456a9b62e43e2cc7bc6d44
+        branch: fs-uae-launcher-3.0
+        commit: 1112b0c5e39eee419d23a0504810cbbe6190eaca
       - type: shell
         commands:
           - sed 's/prefix := .*/prefix := /g' -i ./bootstrap
           - sed 's/cp -a share\/\* $(DESTDIR)$(prefix)\/share/cp -fa share\/\* $(DESTDIR)$(prefix)\/share\/runtime/g' -i ./bootstrap
       - type: shell
-        commands: 
+        commands:
           - ./bootstrap
+    modules:
+      - name: requests
+        buildsystem: simple
+        build-commands:
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+        sources:
+          - type: archive
+            url: https://github.com/psf/requests/archive/v2.22.0.tar.gz
+            sha256: dcacea1b6a7bfd2cbb6c6a05743606b428f2739f37825e41fbf79af3cc2fd240
+
+      - name: lhafile
+        buildsystem: simple
+        build-commands:
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+        sources:
+          - type: archive
+            url: https://github.com/FrodeSolheim/python-lhafile/archive/v0.2.2.tar.gz
+            sha256: 18396276b77d8c7e094f169d3b2471e60de3d412a2454a0f73c452a54817ee68
+
+      - name: urllib3
+        buildsystem: simple
+        build-commands:
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+        sources:
+          - type: archive
+            url: https://github.com/urllib3/urllib3/archive/1.24.3.tar.gz
+            sha256: d1a74e3b7e7c518ec542658693f24c3b34597226a4ec9ef97aa4c23fbdf86630
+
+      - name: chardet
+        buildsystem: simple
+        build-commands:
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+        sources:
+          - type: archive
+            url: https://github.com/chardet/chardet/archive/3.0.4.tar.gz
+            sha256: d5620025cfca430f6c2e28ddbc87c3c66a5c82fa65570ae975c92911c2190189
+
+      - name: certifi
+        buildsystem: simple
+        build-commands:
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+        sources:
+          - type: archive
+            url: https://github.com/certifi/python-certifi/archive/2019.06.16.tar.gz
+            sha256: fcbaea367cf3a4e8df94271e13326e1482d492569081bb465862bcb1d2019839
+
+      - name: idna
+        buildsystem: simple
+        build-commands:
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+        sources:
+          - type: archive
+            url: https://github.com/kjd/idna/archive/v2.8.tar.gz
+            sha256: db438aeba52c606cf1dd9671cb746377b4baeaea923397152e91576e8404d87a
 
   - name: appdata
     buildsystem: simple
-    build-commands: 
+    build-commands:
       - mkdir -p ${FLATPAK_DEST}/share/appdata
       - install -Dm644 net.fsuae.FS-UAE.appdata.xml ${FLATPAK_DEST}/share/appdata/net.fsuae.FS-UAE.appdata.xml
-    sources: 
+    sources:
       - type: file
         path: net.fsuae.FS-UAE.appdata.xml
