@@ -32,7 +32,44 @@
   <url type="bugtracker">https://github.com/FrodeSolheim/fs-uae/issues</url>
   <content_rating type="oars-1.1"/>
   <releases>
-    <release date="2019-06-22" version="3.0.0"/>
+    <release date="2019-09-20" version="3.0.0-r1">
+      <description>
+        <p>What’s New</p>
+        <ul>
+          <li>Upgrade runtime to org.kde.Platform 5.13</li>
+        </ul>
+      </description>
+    </release>    
+    <release date="2019-06-22" version="3.0.0">
+      <description>
+        <p>Changes in FS-UAE 3.0 (compared to 2.8):</p>
+        <ul>
+          <li>Fixed JIT direct access on modern Linux distributions.</li>
+          <li>FS-UAE default is now to show a 692×540 image, not stretched to fill screen.</li>
+          <li>Built-in configurations for many more game controllers.</li>
+          <li>New option whdload_quit_key to gracefully quit slaves.</li>
+          <li>Added more shaders (compiled/ported/written by guest.r and rsn8887).</li>
+          <li>Updated emulation core from WinUAE 3300b2.</li>
+          <li>Several new configuration options (see Changelog for details).</li>
+          <li>Many more smaller fixes and updates (see Changelog for details).</li>
+        </ul>
+        <p>Changes in FS-UAE Launcher 3.0 (compared to 2.8):</p>
+        <ul>
+          <li>Plugins can provide files for offline use (WHDLoad, JST, SKick, etc).</li>
+          <li>Added support for .gz/.adz/.roz/.xz-compressed files.</li>
+          <li>Support WHDLoad versions 18.4 and 18.5 (game database).</li>
+          <li>Revert fullscreen_mode to default when upgrading from older versions.</li>
+          <li>Use https for all more fs-uae.net and openretro.org communication.</li>
+          <li>Support hd_requirements = xpkmaster.library.</li>
+          <li>Fixed problem on Windows where devices were sometimes not detected.</li>
+          <li>Make configurations list wider when window width is quite large.</li>
+          <li>Try to use config from game database when launching with a WHDLoad archive.</li>
+          <li>Extract WHDLoad arguments from .info file when loading a WHDLoad archive.</li>
+          <li>Sync “unpublished” games from the online game database, option to show.</li>
+          <li>Many bugfixes and smaller improvements (see Changelog for details).</li>
+        </ul>
+      </description>
+    </release>
     <release date="2019-05-12" version="2.8.4-r1">
       <description>
         <p>What’s New</p>
