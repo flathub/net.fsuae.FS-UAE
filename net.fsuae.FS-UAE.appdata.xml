@@ -32,6 +32,20 @@
   <url type="bugtracker">https://github.com/FrodeSolheim/fs-uae/issues</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release date="2020-03-09" version="3.0.3">
+      <description>
+        <p>What’s New</p>
+        <ul>
+          <li>Fixed crash when starting the Launcher in a KDE environment.</li>
+          <li>Another fix for global WHDLoad quit key.</li>
+          <li>Fixed a misleading warning when cyberstorm ROM was not found (3.0.1).</li>
+          <li>Scanner bug prevented Conquests of the Longbow WHDLoad to be recognized.</li>
+          <li>The correct kickstart wasn't always loaded.</li>
+          <li>Cloanto ROMs were not always decrypted.</li>
+          <li>Fix for global WHDLoad quit key.</li>
+        </ul>
+      </description>
+    </release>    
     <release date="2019-09-20" version="3.0.0-r1">
       <description>
         <p>What’s New</p>
