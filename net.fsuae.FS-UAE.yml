@@ -24,8 +24,8 @@ modules:
       - make install
     sources:
       - type: archive
-        url: https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.13.1/PyQt5_gpl-5.13.1.tar.gz
-        sha256: 54b7f456341b89eeb3930e786837762ea67f235e886512496c4152ebe106d4af
+        url: https://www.riverbankcomputing.com/static/Downloads/PyQt5/5.13.2/PyQt5-5.13.2.tar.gz
+        sha256: adc17c077bf233987b8e43ada87d1e0deca9bd71a13e5fd5fc377482ed69c827
     modules:
       - name: sip
         buildsystem: simple
@@ -35,8 +35,8 @@ modules:
           - make install
         sources:
           - type: archive
-            url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.19/sip-4.19.19.tar.gz
-            sha256: 5436b61a78f48c7e8078e93a6b59453ad33780f80c644e5f3af39f94be1ede44
+            url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.22/sip-4.19.22.tar.gz
+            sha256: e1b768824ec1a2ee38dd536b6b6b3d06de27b00a2f5f55470d1b512306e3be45
 
   - name: libmpeg2
     cleanup: [ /bin /include /lib/pkgconfig /lib/*.la ]
@@ -64,7 +64,7 @@ modules:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae
         branch: fs-uae-3.0
-        commit: 31239a79b097728aba9ceeef74d2c135cea49e1c
+        commit: fb7514f1446000285377b16bba089eeafad98c67
       - type: shell
         commands:
           - ./bootstrap
@@ -80,7 +80,7 @@ modules:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae
         branch: fs-uae-3.0
-        commit: 31239a79b097728aba9ceeef74d2c135cea49e1c
+        commit: fb7514f1446000285377b16bba089eeafad98c67
       - type: shell
         commands:
           - ./bootstrap
@@ -98,8 +98,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae-launcher
-        branch: fs-uae-launcher-3.0
-        commit: 1112b0c5e39eee419d23a0504810cbbe6190eaca
+        commit: 1f7c8d77ed70c8a7cf3146073a00d86d0e38b181
       - type: shell
         commands:
           - sed 's/prefix := .*/prefix := /g' -i ./bootstrap
