@@ -1,5 +1,4 @@
 app-id: net.fsuae.FS-UAE
-branch: stable
 command: fs-uae
 runtime: org.kde.Platform
 runtime-version: '5.14'
@@ -12,6 +11,7 @@ finish-args:
   - --share=ipc
   - --share=network
   - --socket=pulseaudio
+  - --socket=wayland  
   - --socket=x11
 modules:
   - name: PyQt5
@@ -42,8 +42,8 @@ modules:
           - make install
         sources:
           - type: archive
-            url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.22/sip-4.19.22.tar.gz
-            sha256: e1b768824ec1a2ee38dd536b6b6b3d06de27b00a2f5f55470d1b512306e3be45
+            url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.24/sip-4.19.24.tar.gz
+            sha256: edcd3790bb01938191eef0f6117de0bf56d1136626c0ddb678f3a558d62e41e5
 
   - name: libmpeg2
     cleanup:
@@ -75,13 +75,13 @@ modules:
       - --disable-jit
     no-autogen: true
     post-install:
-      - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
-      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
+      - sed -i s/NoDisplay=.*/NoDisplay=false/ ${FLATPAK_DEST}/share/applications/fs-uae.desktop
+      - cp /app/share/mime/packages/fs-uae.xml ${FLATPAK_DEST}/share/mime/packages/${FLATPAK_ID}.xml
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae
         # branch: fs-uae-3.0
-        # 3.0.4 - no tag
+        # 3.0.5 - no tag
         commit: e2d255ab459aa3dfc0356fc08b83022d71f17d1b
       - type: shell
         commands:
@@ -96,13 +96,13 @@ modules:
       - /share/doc
     no-autogen: true
     post-install:
-      - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
-      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
+      - sed -i s/NoDisplay=.*/NoDisplay=false/ ${FLATPAK_DEST}/share/applications/fs-uae.desktop
+      - cp /app/share/mime/packages/fs-uae.xml ${FLATPAK_DEST}/share/mime/packages/${FLATPAK_ID}.xml
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae
         # branch: fs-uae-3.0
-        # 3.0.4 - no tag
+        # 3.0.5 - no tag
         commit: e2d255ab459aa3dfc0356fc08b83022d71f17d1b
       - type: shell
         commands:
@@ -115,10 +115,10 @@ modules:
     no-autogen: true
     post-install:
       - cp -a /app/share/runtime/applications /app/share/runtime/icons /app/share/
-      - mv /app/share/applications/fs-uae-launcher.desktop /app/share/applications/net.fsuae.FS-UAE.Launcher.desktop
-      - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/net.fsuae.FS-UAE.Launcher.desktop
-      - mv /app/share/icons/hicolor/64x64/apps/fs-uae-launcher.png /app/share/icons/hicolor/64x64/apps/net.fsuae.FS-UAE.Launcher.png
-      - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png /app/share/icons/hicolor/128x128/apps/net.fsuae.FS-UAE.Launcher.png
+      - mv /app/share/applications/fs-uae-launcher.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.Launcher.desktop
+      - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.Launcher.desktop
+      - mv /app/share/icons/hicolor/64x64/apps/fs-uae-launcher.png ${FLATPAK_DEST}/share/icons/hicolor/64x64/apps/${FLATPAK_ID}.Launcher.png
+      - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.Launcher.png
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae-launcher
@@ -188,8 +188,7 @@ modules:
   - name: appdata
     buildsystem: simple
     build-commands:
-      - mkdir -p ${FLATPAK_DEST}/share/appdata
-      - install -Dm644 net.fsuae.FS-UAE.appdata.xml ${FLATPAK_DEST}/share/appdata/net.fsuae.FS-UAE.appdata.xml
+      - install -D -m644 ${FLATPAK_DEST}/share/metainfo/ ${FLATPAK_ID}.appdata.xml
     sources:
       - type: file
         path: net.fsuae.FS-UAE.appdata.xml
