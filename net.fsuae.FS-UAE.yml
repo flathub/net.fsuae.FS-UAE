@@ -78,14 +78,9 @@ modules:
       - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
       - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
     sources:
-      - type: git
-        url: https://github.com/FrodeSolheim/fs-uae
-        # branch: fs-uae-3.0
-        # 3.0.4 - no tag
-        commit: e2d255ab459aa3dfc0356fc08b83022d71f17d1b
-      - type: shell
-        commands:
-          - ./bootstrap
+      - type: archive
+        url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
+        sha256: f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3
 
   - name: fs-uae-jit
     only-arches:
@@ -99,15 +94,9 @@ modules:
       - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
       - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
     sources:
-      - type: git
-        url: https://github.com/FrodeSolheim/fs-uae
-        # branch: fs-uae-3.0
-        # 3.0.4 - no tag
-        commit: e2d255ab459aa3dfc0356fc08b83022d71f17d1b
-      - type: shell
-        commands:
-          - ./bootstrap
-
+      - type: archive
+        url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
+        sha256: f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3
 
   - name: fs-uae-launcher
     make-install-args:
@@ -122,6 +111,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae-launcher
+        # 3.0.4 no tag
         commit: eaabf6d6e170204aca24a88c3d9de8a599086ded
       - type: shell
         commands:
