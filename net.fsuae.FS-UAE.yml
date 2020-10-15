@@ -2,7 +2,7 @@ app-id: net.fsuae.FS-UAE
 branch: stable
 command: fs-uae
 runtime: org.kde.Platform
-runtime-version: '5.14'
+runtime-version: '5.15'
 sdk: org.kde.Sdk
 rename-desktop-file: fs-uae.desktop
 rename-icon: fs-uae
