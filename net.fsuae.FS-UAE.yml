@@ -20,10 +20,10 @@ modules:
       - python3 configure.py 
         --confirm-license 
         --assume-shared 
-        -d /app/lib/python3.7/site-packages 
+        --destdir /app/lib/python3.8/site-packages 
         --sip=/app/bin/sip 
         --sip-incdir=/app/include 
-        --stubsdir=/app/lib/python3.7/site-packages 
+        --stubsdir=/app/lib/python3.8/site-packages 
         --no-docstrings 
         --no-qml-plugin 
         --no-qsci-api 
@@ -56,7 +56,7 @@ modules:
       - --enable-x11
     cleanup:
       - /include
-      - /lib/python3.7/site-packages/*.pyi
+      - /lib/python3.8/site-packages/*.pyi
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/4d/81/b9a66a28fb9a7bbeb60e266f06ebc4703e7e42b99e3609bf1b58ddd232b9/PyQt5-5.14.2.tar.gz
@@ -68,10 +68,10 @@ modules:
           - python3 configure.py 
             --sip-module PyQt5.sip 
             --bindir /app/bin 
-            --destdir /app/lib/python3.7/site-packages 
+            --destdir /app/lib/python3.8/site-packages 
             --incdir /app/include 
             --sipdir /app/share/sip 
-            --stubsdir=/app/lib/python3.7/site-packages
+            --stubsdir=/app/lib/python3.8/site-packages
           - make -j $FLATPAK_BUILDER_N_JOBS
           - make install
         cleanup:
