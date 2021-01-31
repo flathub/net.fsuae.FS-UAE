@@ -15,45 +15,81 @@ finish-args:
   - --socket=x11
 modules:
   - name: PyQt5
-    cleanup:
-      - /include
-      - /lib/python3.7/site-packages/*.pyi
+    buildsystem: simple
+    build-commands:
+      - python3 configure.py 
+        --confirm-license 
+        --assume-shared 
+        -d /app/lib/python3.7/site-packages 
+        --sip=/app/bin/sip 
+        --sip-incdir=/app/include 
+        --stubsdir=/app/lib/python3.7/site-packages 
+        --no-docstrings 
+        --no-qml-plugin 
+        --no-qsci-api 
+        --no-sip-files 
+        --no-tools 
+        --disable=QtBluetooth 
+        --disable=QtDesigner 
+        --disable=QtLocation 
+        --disable=QtMultimedia 
+        --disable=QtMultimediaWidgets 
+        --disable=QtNfc 
+        --disable=QtPositioning
+        --disable=QtQml 
+        --disable=QtQuick 
+        --disable=QtQuickWidgets 
+        --disable=QtSensors 
+        --disable=QtSql 
+        --disable=QtTest 
+        --disable=QtWebChannel 
+        --disable=QtWebEngine 
+        --disable=QtWebEngineCore 
+        --disable=QtWebKit 
+        --disable=QtWebKitWidgets 
+        --disable=QtXmlPatterns 
+        --disable=QWebEngineWidgets 
+      - make -j $FLATPAK_BUILDER_N_JOBS
+      - make install
     config-opts:
       - --disable-static
       - --enable-x11
-    buildsystem: simple
-    build-commands:
-      - python3 configure.py --confirm-license --no-docstrings --assume-shared --no-sip-files --no-qml-plugin --no-tools --no-qsci-api -d ${FLATPAK_DEST}/lib/python3.7/site-packages --sip=${FLATPAK_DEST}/bin/sip --sip-incdir=${FLATPAK_DEST}/include --stubsdir=${FLATPAK_DEST}/lib/python3.7/site-packages --disable=QtSensors --disable=QtWebEngine --disable=QtQuick --disable=QtQml --disable=QtTest --disable=QtWebChannel --disable=QtWebEngineCore --disable=QWebEngineWidgets --disable=QtQuickWidgets --disable=QtSql --disable=QtXmlPatterns --disable=QtMultimedia --disable=QtMultimediaWidgets --disable=QtLocation --disable=QtDesigner --disable=QtBluetooth --disable=QtWebKit --disable=QtWebKitWidgets --disable=QtNfc --disable=QtPositioning
-      - make -j $FLATPAK_BUILDER_N_JOBS
-      - make install
+    cleanup:
+      - /include
+      - /lib/python3.7/site-packages/*.pyi
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/4d/81/b9a66a28fb9a7bbeb60e266f06ebc4703e7e42b99e3609bf1b58ddd232b9/PyQt5-5.14.2.tar.gz
         sha256: bd230c6fd699eabf1ceb51e13a8b79b74c00a80272c622427b80141a22269eb0
     modules:
       - name: sip
-        cleanup:
-          - /bin/sip
-          - /include
         buildsystem: simple
         build-commands:
-          - python3 configure.py --sip-module PyQt5.sip -b ${FLATPAK_DEST}/bin -d ${FLATPAK_DEST}/lib/python3.7/site-packages -e ${FLATPAK_DEST}/include -v ${FLATPAK_DEST}/share/sip --stubsdir=${FLATPAK_DEST}/lib/python3.7/site-packages
-          - make
+          - python3 configure.py 
+            --sip-module PyQt5.sip 
+            --bindir /app/bin 
+            --destdir /app/lib/python3.7/site-packages 
+            --incdir /app/include 
+            --sipdir /app/share/sip 
+            --stubsdir=/app/lib/python3.7/site-packages
+          - make -j $FLATPAK_BUILDER_N_JOBS
           - make install
+        cleanup:
+          - /bin
         sources:
           - type: archive
             url: https://distfiles.macports.org/py-sip/sip-4.19.22.tar.gz
             sha256: e1b768824ec1a2ee38dd536b6b6b3d06de27b00a2f5f55470d1b512306e3be45
 
   - name: libmpeg2
+    config-opts:
+      - --disable-static
+    rm-configure: true
     cleanup:
       - /bin
       - /include
       - /lib/pkgconfig
       - /lib/*.la
-    config-opts:
-      - --disable-static
-    rm-configure: true
     sources:
       - type: archive
         url: http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz
@@ -68,15 +104,15 @@ modules:
     skip-arches:
       - i386
       - x86_64
-    cleanup:
-      - /share/man
-      - /share/doc
     config-opts:
       - --disable-jit
     no-autogen: true
     post-install:
       - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
-      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
+      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/${FLATPAK_ID}.xml
+    cleanup:
+      - /share/man
+      - /share/doc
     sources:
       - type: archive
         url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
@@ -86,13 +122,13 @@ modules:
     only-arches:
       - i386
       - x86_64
-    cleanup:
-      - /share/man
-      - /share/doc
     no-autogen: true
     post-install:
       - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
-      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/net.fsuae.FS-UAE.xml
+      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/${FLATPAK_ID}.xml
+    cleanup:
+      - /share/man
+      - /share/doc
     sources:
       - type: archive
         url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
@@ -104,10 +140,10 @@ modules:
     no-autogen: true
     post-install:
       - cp -a /app/share/runtime/applications /app/share/runtime/icons /app/share/
-      - mv /app/share/applications/fs-uae-launcher.desktop /app/share/applications/net.fsuae.FS-UAE.Launcher.desktop
-      - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/net.fsuae.FS-UAE.Launcher.desktop
-      - mv /app/share/icons/hicolor/64x64/apps/fs-uae-launcher.png /app/share/icons/hicolor/64x64/apps/net.fsuae.FS-UAE.Launcher.png
-      - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png /app/share/icons/hicolor/128x128/apps/net.fsuae.FS-UAE.Launcher.png
+      - mv /app/share/applications/fs-uae-launcher.desktop /app/share/applications/${FLATPAK_ID}.Launcher.desktop
+      - mv /app/share/icons/hicolor/64x64/apps/fs-uae-launcher.png /app/share/icons/hicolor/64x64/apps/${FLATPAK_ID}.Launcher.png
+      - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png /app/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.Launcher.png
+      - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/${FLATPAK_ID}.Launcher.desktop
     sources:
       - type: git
         url: https://github.com/FrodeSolheim/fs-uae-launcher
@@ -178,8 +214,8 @@ modules:
   - name: appdata
     buildsystem: simple
     build-commands:
-      - mkdir -p ${FLATPAK_DEST}/share/appdata
-      - install -Dm644 net.fsuae.FS-UAE.appdata.xml ${FLATPAK_DEST}/share/appdata/net.fsuae.FS-UAE.appdata.xml
+      - mkdir -p /app/share/appdata
+      - install -D -m644 -t /app/share/appdata/ ${FLATPAK_ID}.appdata.xml
     sources:
       - type: file
         path: net.fsuae.FS-UAE.appdata.xml
