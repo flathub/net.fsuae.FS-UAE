@@ -115,8 +115,8 @@ modules:
       - /share/doc
     sources:
       - type: archive
-        url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
-        sha256: f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3
+        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.47/fs-uae-3.1.47.tar.xz
+        sha256: b9761b7f60068c8b7d4daa0f08efdfbaa0662901ac1aba9101964906bc558320
 
   - name: fs-uae-jit
     only-arches:
@@ -131,8 +131,8 @@ modules:
       - /share/doc
     sources:
       - type: archive
-        url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
-        sha256: f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3
+        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.47/fs-uae-3.1.47.tar.xz
+        sha256: b9761b7f60068c8b7d4daa0f08efdfbaa0662901ac1aba9101964906bc558320
 
   - name: fs-uae-launcher
     make-install-args:
@@ -145,17 +145,13 @@ modules:
       - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png /app/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.Launcher.png
       - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/${FLATPAK_ID}.Launcher.desktop
     sources:
-      - type: git
-        url: https://github.com/FrodeSolheim/fs-uae-launcher
-        # 3.0.4 no tag
-        commit: eaabf6d6e170204aca24a88c3d9de8a599086ded
+      - type: archive
+        url: https://fs-uae.net/files/FS-UAE-Launcher/Stable/3.1.42/fs-uae-launcher-3.1.42.tar.xz
+        sha256: f332ad40a8743851cfabd53e5ac5a956b210a53061eb885e011096eacb66f683
       - type: shell
         commands:
-          - sed 's/prefix := .*/prefix := /g' -i ./bootstrap
-          - sed 's/cp -a share\/\* $(DESTDIR)$(prefix)\/share/cp -fa share\/\* $(DESTDIR)$(prefix)\/share\/runtime/g' -i ./bootstrap
-      - type: shell
-        commands:
-          - ./bootstrap
+          - sed 's/prefix := .*/prefix := /g' -i ./Makefile
+          - sed 's/cp -a share\/\* $(DESTDIR)$(prefix)\/share/cp -fa share\/\* $(DESTDIR)$(prefix)\/share\/runtime/g' -i ./Makefile
     modules:
       - name: requests
         buildsystem: simple
