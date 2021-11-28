@@ -2,7 +2,7 @@ app-id: net.fsuae.FS-UAE
 branch: stable
 command: fs-uae
 runtime: org.kde.Platform
-runtime-version: '5.15'
+runtime-version: '5.15-21.08'
 sdk: org.kde.Sdk
 rename-desktop-file: fs-uae.desktop
 rename-icon: fs-uae
@@ -14,16 +14,37 @@ finish-args:
   - --socket=pulseaudio
   - --socket=x11
 modules:
-  - name: PyQt5
+  - name: sip
     buildsystem: simple
     build-commands:
-      - python3 configure.py 
-        --confirm-license 
-        --assume-shared 
-        --destdir /app/lib/python3.8/site-packages 
-        --sip=/app/bin/sip 
-        --sip-incdir=/app/include 
-        --stubsdir=/app/lib/python3.8/site-packages 
+      - python3 configure.py
+        --bindir=/app/bin
+        --destdir=/app/lib/python3.9/site-packages
+        --incdir=/app/include/python3
+        --sipdir=/app/share/sip
+        --stubsdir=/app/lib/python3.9/site-packages
+        --sip-module=PyQt5.sip
+      - make -j $FLATPAK_BUILDER_N_JOBS
+      - make install
+    cleanup:
+      - /bin
+      - /include
+      - /lib/python3.9/site-packages/*.pyi
+    sources:
+      - type: archive
+        url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.25/sip-4.19.25.tar.gz
+        sha256: b39d93e937647807bac23579edbff25fe46d16213f708370072574ab1f1b4211
+
+  - name: pyqt
+    buildsystem: simple
+    build-commands:
+      - python3 configure.py
+        --confirm-license
+        --bindir=/app/bin
+        --destdir=/app/lib/python3.9/site-packages
+        --sip-incdir=/app/include/python3
+        --sipdir=/app/share/sip
+        --stubsdir=/app/lib/python3.9/site-packages
         --no-docstrings 
         --no-qml-plugin 
         --no-qsci-api 
@@ -48,7 +69,7 @@ modules:
         --disable=QtWebKit 
         --disable=QtWebKitWidgets 
         --disable=QtXmlPatterns 
-        --disable=QWebEngineWidgets 
+        --disable=QWebEngineWidgets         
       - make -j $FLATPAK_BUILDER_N_JOBS
       - make install
     config-opts:
@@ -56,30 +77,11 @@ modules:
       - --enable-x11
     cleanup:
       - /include
-      - /lib/python3.8/site-packages/*.pyi
+      - /lib/python3.9/site-packages/*.pyi
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/4d/81/b9a66a28fb9a7bbeb60e266f06ebc4703e7e42b99e3609bf1b58ddd232b9/PyQt5-5.14.2.tar.gz
-        sha256: bd230c6fd699eabf1ceb51e13a8b79b74c00a80272c622427b80141a22269eb0
-    modules:
-      - name: sip
-        buildsystem: simple
-        build-commands:
-          - python3 configure.py 
-            --sip-module PyQt5.sip 
-            --bindir /app/bin 
-            --destdir /app/lib/python3.8/site-packages 
-            --incdir /app/include 
-            --sipdir /app/share/sip 
-            --stubsdir=/app/lib/python3.8/site-packages
-          - make -j $FLATPAK_BUILDER_N_JOBS
-          - make install
-        cleanup:
-          - /bin
-        sources:
-          - type: archive
-            url: https://distfiles.macports.org/py-sip/sip-4.19.22.tar.gz
-            sha256: e1b768824ec1a2ee38dd536b6b6b3d06de27b00a2f5f55470d1b512306e3be45
+        url: https://files.pythonhosted.org/packages/8e/a4/d5e4bf99dd50134c88b95e926d7b81aad2473b47fde5e3e4eac2c69a8942/PyQt5-5.15.4.tar.gz
+        sha256: 2a69597e0dd11caabe75fae133feca66387819fc9bc050f547e5551bce97e5be
 
   - name: libmpeg2
     config-opts:
@@ -115,8 +117,8 @@ modules:
       - /share/doc
     sources:
       - type: archive
-        url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
-        sha256: f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3
+        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.47/fs-uae-3.1.47.tar.xz
+        sha256: b9761b7f60068c8b7d4daa0f08efdfbaa0662901ac1aba9101964906bc558320
 
   - name: fs-uae-jit
     only-arches:
@@ -131,8 +133,8 @@ modules:
       - /share/doc
     sources:
       - type: archive
-        url: https://fs-uae.net/stable/3.0.5/fs-uae-3.0.5.tar.gz
-        sha256: f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3
+        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.47/fs-uae-3.1.47.tar.xz
+        sha256: b9761b7f60068c8b7d4daa0f08efdfbaa0662901ac1aba9101964906bc558320
 
   - name: fs-uae-launcher
     make-install-args:
@@ -145,17 +147,13 @@ modules:
       - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png /app/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.Launcher.png
       - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/${FLATPAK_ID}.Launcher.desktop
     sources:
-      - type: git
-        url: https://github.com/FrodeSolheim/fs-uae-launcher
-        # 3.0.4 no tag
-        commit: eaabf6d6e170204aca24a88c3d9de8a599086ded
+      - type: archive
+        url: https://fs-uae.net/files/FS-UAE-Launcher/Stable/3.1.42/fs-uae-launcher-3.1.42.tar.xz
+        sha256: f332ad40a8743851cfabd53e5ac5a956b210a53061eb885e011096eacb66f683
       - type: shell
         commands:
-          - sed 's/prefix := .*/prefix := /g' -i ./bootstrap
-          - sed 's/cp -a share\/\* $(DESTDIR)$(prefix)\/share/cp -fa share\/\* $(DESTDIR)$(prefix)\/share\/runtime/g' -i ./bootstrap
-      - type: shell
-        commands:
-          - ./bootstrap
+          - sed 's/prefix := .*/prefix := /g' -i ./Makefile
+          - sed 's/cp -a share\/\* $(DESTDIR)$(prefix)\/share/cp -fa share\/\* $(DESTDIR)$(prefix)\/share\/runtime/g' -i ./Makefile
     modules:
       - name: requests
         buildsystem: simple

@@ -32,6 +32,23 @@
   <url type="bugtracker">https://github.com/FrodeSolheim/fs-uae/issues</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release date="2021-11-10" version="3.1.0">
+      <ul>
+        <li>Fix device helper for xinput devices with recent SDL2 versions.</li>
+        <li>Support for multiple mice disabled by default on macOS due to security warning. Use option multiple_mice = 1 to enable.</li>
+        <li>Disable expect_version option (no longer synchronized with launcher).</li>
+        <li>Added support for more physical keys (when using rawinput).</li>
+        <li>Compilation fixes for Apple M1 hardware.</li>
+        <li>Netplay desync fixes related to file system (directory hard drives).</li>
+        <li>Better virtual memory reservation algorithm.</li>
+        <li>Option to automatically pause on menu screen [mrsilver76].</li>
+        <li>Use RTLD_DEEPBIND with dlopen on Linux when loading plugins.</li>
+        <li>Changes to how plugins are looked up.</li>
+        <li>Ide patch.</li>
+        <li>SCP floppy image doesn't wrap to revolution #0 cleanly [keirf].</li>
+        <li>Fixed crash in nname_to_aname [PowderedToastMan].</li>
+      </ul>
+    </release>
     <release date="2020-04-24" version="3.0.5" />
     <release date="2020-04-23" version="3.0.4">
       <ul>
