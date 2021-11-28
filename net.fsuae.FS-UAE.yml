@@ -19,17 +19,17 @@ modules:
     build-commands:
       - python3 configure.py
         --bindir=/app/bin
-        --destdir=/app/lib/python3.8/site-packages
+        --destdir=/app/lib/python3.9/site-packages
         --incdir=/app/include/python3
         --sipdir=/app/share/sip
-        --stubsdir=/app/lib/python3.8/site-packages
+        --stubsdir=/app/lib/python3.9/site-packages
         --sip-module=PyQt5.sip
       - make -j $FLATPAK_BUILDER_N_JOBS
       - make install
     cleanup:
       - /bin
       - /include
-      - /lib/python3.8/site-packages/*.pyi
+      - /lib/python3.9/site-packages/*.pyi
     sources:
       - type: archive
         url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.25/sip-4.19.25.tar.gz
@@ -41,10 +41,10 @@ modules:
       - python3 configure.py
         --confirm-license
         --bindir=/app/bin
-        --destdir=/app/lib/python3.8/site-packages
+        --destdir=/app/lib/python3.9/site-packages
         --sip-incdir=/app/include/python3
         --sipdir=/app/share/sip
-        --stubsdir=/app/lib/python3.8/site-packages
+        --stubsdir=/app/lib/python3.9/site-packages
         --no-docstrings 
         --no-qml-plugin 
         --no-qsci-api 
@@ -77,7 +77,7 @@ modules:
       - --enable-x11
     cleanup:
       - /include
-      - /lib/python3.8/site-packages/*.pyi
+      - /lib/python3.9/site-packages/*.pyi
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/8e/a4/d5e4bf99dd50134c88b95e926d7b81aad2473b47fde5e3e4eac2c69a8942/PyQt5-5.15.4.tar.gz
