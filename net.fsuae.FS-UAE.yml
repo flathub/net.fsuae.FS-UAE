@@ -2,7 +2,7 @@ app-id: net.fsuae.FS-UAE
 branch: stable
 command: fs-uae
 runtime: org.kde.Platform
-runtime-version: '5.15'
+runtime-version: '5.15-21.08'
 sdk: org.kde.Sdk
 rename-desktop-file: fs-uae.desktop
 rename-icon: fs-uae
@@ -14,16 +14,37 @@ finish-args:
   - --socket=pulseaudio
   - --socket=x11
 modules:
-  - name: PyQt5
+  - name: sip
     buildsystem: simple
     build-commands:
-      - python3 configure.py 
-        --confirm-license 
-        --assume-shared 
-        --destdir /app/lib/python3.8/site-packages 
-        --sip=/app/bin/sip 
-        --sip-incdir=/app/include 
-        --stubsdir=/app/lib/python3.8/site-packages 
+      - python3 configure.py
+        --bindir=/app/bin
+        --destdir=/app/lib/python3.8/site-packages
+        --incdir=/app/include/python3
+        --sipdir=/app/share/sip
+        --stubsdir=/app/lib/python3.8/site-packages
+        --sip-module=PyQt5.sip
+      - make -j $FLATPAK_BUILDER_N_JOBS
+      - make install
+    cleanup:
+      - /bin
+      - /include
+      - /lib/python3.8/site-packages/*.pyi
+    sources:
+      - type: archive
+        url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.25/sip-4.19.25.tar.gz
+        sha256: b39d93e937647807bac23579edbff25fe46d16213f708370072574ab1f1b4211
+
+  - name: pyqt
+    buildsystem: simple
+    build-commands:
+      - python3 configure.py
+        --confirm-license
+        --bindir=/app/bin
+        --destdir=/app/lib/python3.8/site-packages
+        --sip-incdir=/app/include/python3
+        --sipdir=/app/share/sip
+        --stubsdir=/app/lib/python3.8/site-packages
         --no-docstrings 
         --no-qml-plugin 
         --no-qsci-api 
@@ -48,7 +69,7 @@ modules:
         --disable=QtWebKit 
         --disable=QtWebKitWidgets 
         --disable=QtXmlPatterns 
-        --disable=QWebEngineWidgets 
+        --disable=QWebEngineWidgets         
       - make -j $FLATPAK_BUILDER_N_JOBS
       - make install
     config-opts:
@@ -59,27 +80,8 @@ modules:
       - /lib/python3.8/site-packages/*.pyi
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/4d/81/b9a66a28fb9a7bbeb60e266f06ebc4703e7e42b99e3609bf1b58ddd232b9/PyQt5-5.14.2.tar.gz
-        sha256: bd230c6fd699eabf1ceb51e13a8b79b74c00a80272c622427b80141a22269eb0
-    modules:
-      - name: sip
-        buildsystem: simple
-        build-commands:
-          - python3 configure.py 
-            --sip-module PyQt5.sip 
-            --bindir /app/bin 
-            --destdir /app/lib/python3.8/site-packages 
-            --incdir /app/include 
-            --sipdir /app/share/sip 
-            --stubsdir=/app/lib/python3.8/site-packages
-          - make -j $FLATPAK_BUILDER_N_JOBS
-          - make install
-        cleanup:
-          - /bin
-        sources:
-          - type: archive
-            url: https://distfiles.macports.org/py-sip/sip-4.19.22.tar.gz
-            sha256: e1b768824ec1a2ee38dd536b6b6b3d06de27b00a2f5f55470d1b512306e3be45
+        url: https://files.pythonhosted.org/packages/8e/a4/d5e4bf99dd50134c88b95e926d7b81aad2473b47fde5e3e4eac2c69a8942/PyQt5-5.15.4.tar.gz
+        sha256: 2a69597e0dd11caabe75fae133feca66387819fc9bc050f547e5551bce97e5be
 
   - name: libmpeg2
     config-opts:
