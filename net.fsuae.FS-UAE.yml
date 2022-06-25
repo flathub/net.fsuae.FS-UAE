@@ -117,8 +117,8 @@ modules:
       - /share/doc
     sources:
       - type: archive
-        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.47/fs-uae-3.1.47.tar.xz
-        sha256: b9761b7f60068c8b7d4daa0f08efdfbaa0662901ac1aba9101964906bc558320
+        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.66/fs-uae-3.1.66.tar.xz
+        sha256: 606e1868b500413d69bd33bb469f8fd08d6c08988801f17b7dd022f3fbe23832
 
   - name: fs-uae-jit
     only-arches:
@@ -133,8 +133,8 @@ modules:
       - /share/doc
     sources:
       - type: archive
-        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.47/fs-uae-3.1.47.tar.xz
-        sha256: b9761b7f60068c8b7d4daa0f08efdfbaa0662901ac1aba9101964906bc558320
+        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.66/fs-uae-3.1.66.tar.xz
+        sha256: 606e1868b500413d69bd33bb469f8fd08d6c08988801f17b7dd022f3fbe23832
 
   - name: fs-uae-launcher
     make-install-args:
@@ -148,8 +148,8 @@ modules:
       - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/${FLATPAK_ID}.Launcher.desktop
     sources:
       - type: archive
-        url: https://fs-uae.net/files/FS-UAE-Launcher/Stable/3.1.42/fs-uae-launcher-3.1.42.tar.xz
-        sha256: f332ad40a8743851cfabd53e5ac5a956b210a53061eb885e011096eacb66f683
+        url: https://fs-uae.net/files/FS-UAE-Launcher/Stable/3.1.66/fs-uae-launcher-3.1.66.tar.xz
+        sha256: 47f09069e5b474c0295e989e13edef0eb76c5982fdefd96ec62e0b5363a08ebe
       - type: shell
         commands:
           - sed 's/prefix := .*/prefix := /g' -i ./Makefile

@@ -32,6 +32,12 @@
   <url type="bugtracker">https://github.com/FrodeSolheim/fs-uae/issues</url>
   <content_rating type="oars-1.1"/>
   <releases>
+    <release date="2022-06-22" version="3.1.66">
+      <ul>
+        <li>It is a minor maintenance release of the 3.1.x series (and possibly the last one).</li>
+        <li>The bundled SDL version has been updated to 2.0.18, and updated controller mappings are also included.</li>
+      </ul>
+    </release>
     <release date="2021-11-10" version="3.1.0">
       <ul>
         <li>Fix device helper for xinput devices with recent SDL2 versions.</li>
