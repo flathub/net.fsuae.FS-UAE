@@ -2,9 +2,17 @@ app-id: net.fsuae.FS-UAE
 branch: stable
 command: fs-uae
 runtime: org.kde.Platform
-runtime-version: '5.15-22.08'
+runtime-version: '5.15-24.08'
 sdk: org.kde.Sdk
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '5.15-24.08'
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
+build-options:
+  env:
+    - BASEAPP_REMOVE_WEBENGINE=1
 rename-desktop-file: fs-uae.desktop
+rename-mime-file: fs-uae.xml
 rename-icon: fs-uae
 finish-args:
   - --device=all
@@ -14,75 +22,6 @@ finish-args:
   - --socket=pulseaudio
   - --socket=x11
 modules:
-  - name: sip
-    buildsystem: simple
-    build-commands:
-      - python3 configure.py
-        --bindir=/app/bin
-        --destdir=/app/lib/python3.10/site-packages
-        --incdir=/app/include/python3
-        --sipdir=/app/share/sip
-        --stubsdir=/app/lib/python3.10/site-packages
-        --sip-module=PyQt5.sip
-      - make -j $FLATPAK_BUILDER_N_JOBS
-      - make install
-    cleanup:
-      - /bin
-      - /include
-      - /lib/python3.10/site-packages/*.pyi
-    sources:
-      - type: archive
-        url: https://www.riverbankcomputing.com/static/Downloads/sip/4.19.25/sip-4.19.25.tar.gz
-        sha256: b39d93e937647807bac23579edbff25fe46d16213f708370072574ab1f1b4211
-
-  - name: pyqt
-    buildsystem: simple
-    build-commands:
-      - python3 configure.py
-        --confirm-license
-        --bindir=/app/bin
-        --destdir=/app/lib/python3.10/site-packages
-        --sip-incdir=/app/include/python3
-        --sipdir=/app/share/sip
-        --stubsdir=/app/lib/python3.10/site-packages
-        --no-docstrings 
-        --no-qml-plugin 
-        --no-qsci-api 
-        --no-sip-files 
-        --no-tools 
-        --disable=QtBluetooth 
-        --disable=QtDesigner 
-        --disable=QtLocation 
-        --disable=QtMultimedia 
-        --disable=QtMultimediaWidgets 
-        --disable=QtNfc 
-        --disable=QtPositioning
-        --disable=QtQml 
-        --disable=QtQuick 
-        --disable=QtQuickWidgets 
-        --disable=QtSensors 
-        --disable=QtSql 
-        --disable=QtTest 
-        --disable=QtWebChannel 
-        --disable=QtWebEngine 
-        --disable=QtWebEngineCore 
-        --disable=QtWebKit 
-        --disable=QtWebKitWidgets 
-        --disable=QtXmlPatterns 
-        --disable=QWebEngineWidgets         
-      - make -j $FLATPAK_BUILDER_N_JOBS
-      - make install
-    config-opts:
-      - --disable-static
-      - --enable-x11
-    cleanup:
-      - /include
-      - /lib/python3.10/site-packages/*.pyi
-    sources:
-      - type: archive
-        url: https://files.pythonhosted.org/packages/8e/a4/d5e4bf99dd50134c88b95e926d7b81aad2473b47fde5e3e4eac2c69a8942/PyQt5-5.15.4.tar.gz
-        sha256: 2a69597e0dd11caabe75fae133feca66387819fc9bc050f547e5551bce97e5be
-
   - name: libmpeg2
     config-opts:
       - --disable-static
@@ -103,15 +42,14 @@ modules:
           - autoreconf -vfi
 
   - name: fs-uae
-    skip-arches:
-      - i386
-      - x86_64
-    config-opts:
-      - --disable-jit
+    build-options:
+      arch:
+        aarch64:
+          config-opts:
+            - --disable-jit
     no-autogen: true
     post-install:
-      - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
-      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/${FLATPAK_ID}.xml
+      - desktop-file-edit --set-key=NoDisplay --set-value=false /app/share/applications/fs-uae.desktop
     cleanup:
       - /share/man
       - /share/doc
@@ -119,22 +57,11 @@ modules:
       - type: archive
         url: https://fs-uae.net/files/FS-UAE/Stable/3.1.66/fs-uae-3.1.66.tar.xz
         sha256: 606e1868b500413d69bd33bb469f8fd08d6c08988801f17b7dd022f3fbe23832
-
-  - name: fs-uae-jit
-    only-arches:
-      - i386
-      - x86_64
-    no-autogen: true
-    post-install:
-      - sed -i s/NoDisplay=.*/NoDisplay=false/ /app/share/applications/fs-uae.desktop
-      - cp /app/share/mime/packages/fs-uae.xml /app/share/mime/packages/${FLATPAK_ID}.xml
-    cleanup:
-      - /share/man
-      - /share/doc
-    sources:
-      - type: archive
-        url: https://fs-uae.net/files/FS-UAE/Stable/3.1.66/fs-uae-3.1.66.tar.xz
-        sha256: 606e1868b500413d69bd33bb469f8fd08d6c08988801f17b7dd022f3fbe23832
+      - type: patch
+        path: fs-uae-install.patch
+      - type: shell
+        commands:
+          - autoreconf -vfi
 
   - name: fs-uae-launcher
     make-install-args:
@@ -145,11 +72,14 @@ modules:
       - mv /app/share/applications/fs-uae-launcher.desktop /app/share/applications/${FLATPAK_ID}.Launcher.desktop
       - mv /app/share/icons/hicolor/64x64/apps/fs-uae-launcher.png /app/share/icons/hicolor/64x64/apps/${FLATPAK_ID}.Launcher.png
       - mv /app/share/icons/hicolor/128x128/apps/fs-uae-launcher.png /app/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.Launcher.png
-      - sed -i s/Icon=.*/Icon=net.fsuae.FS-UAE.Launcher/ /app/share/applications/${FLATPAK_ID}.Launcher.desktop
+      - desktop-file-edit --set-icon=net.fsuae.FS-UAE.Launcher /app/share/applications/${FLATPAK_ID}.Launcher.desktop
+      - install -D -m644 -t /app/share/appdata/ ${FLATPAK_ID}.appdata.xml
     sources:
       - type: archive
         url: https://fs-uae.net/files/FS-UAE-Launcher/Stable/3.1.66/fs-uae-launcher-3.1.66.tar.xz
         sha256: 47f09069e5b474c0295e989e13edef0eb76c5982fdefd96ec62e0b5363a08ebe
+      - type: file
+        path: net.fsuae.FS-UAE.appdata.xml
       - type: shell
         commands:
           - sed 's/prefix := .*/prefix := /g' -i ./Makefile
@@ -208,12 +138,3 @@ modules:
           - type: archive
             url: https://github.com/kjd/idna/archive/v2.8.tar.gz
             sha256: db438aeba52c606cf1dd9671cb746377b4baeaea923397152e91576e8404d87a
-
-  - name: appdata
-    buildsystem: simple
-    build-commands:
-      - mkdir -p /app/share/appdata
-      - install -D -m644 -t /app/share/appdata/ ${FLATPAK_ID}.appdata.xml
-    sources:
-      - type: file
-        path: net.fsuae.FS-UAE.appdata.xml
