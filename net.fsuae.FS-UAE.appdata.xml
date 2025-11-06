@@ -22,19 +22,8 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://fs-uae.net/images/fs-uae/front4.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://fs-uae.net/images/fs-uae/front1.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://fs-uae.net/images/fs-uae/front2.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://fs-uae.net/images/fs-uae/front3.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://fs-uae.net/images/fs-uae/front5.png</image>
+      <image>https://fs-uae.net/s/images/fs-uae/front2.png.v/UFWz6FcRIbwfbhgRPL3XHg94cHw/front2.png</image>
+      <caption>FS-UAE Arcade</caption>
     </screenshot>
   </screenshots>
   <url type="homepage">https://fs-uae.net/</url>
