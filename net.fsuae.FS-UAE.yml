@@ -1,11 +1,10 @@
 app-id: net.fsuae.FS-UAE
-branch: stable
 command: fs-uae
 runtime: org.kde.Platform
-runtime-version: '5.15-24.08'
+runtime-version: '5.15-25.08'
 sdk: org.kde.Sdk
 base: com.riverbankcomputing.PyQt.BaseApp
-base-version: '5.15-24.08'
+base-version: '5.15-25.08'
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
 build-options:
@@ -33,8 +32,15 @@ modules:
       - /lib/*.la
     sources:
       - type: archive
-        url: http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz
+        url: https://github.com/flathub/net.fsuae.FS-UAE/releases/download/deps/libmpeg2-0.5.1.tar.gz
         sha256: dee22e893cb5fc2b2b6ebd60b88478ab8556cb3b93f9a0d7ce8f3b61851871d4
+        mirror-urls:
+          # File is 404
+          - http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz
+          # Works, but be kind with Videolan
+          - https://download.videolan.org/contrib/libmpeg2/libmpeg2-0.5.1.tar.gz
+          # Doesn't work in CI. Probably blocking github.
+          - https://fossies.org/linux/privat/old/libmpeg2-0.5.1.tar.gz
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -88,7 +94,7 @@ modules:
       - name: requests
         buildsystem: simple
         build-commands:
-          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose --no-build-isolation ."
         sources:
           - type: archive
             url: https://github.com/psf/requests/archive/v2.22.0.tar.gz
@@ -97,7 +103,7 @@ modules:
       - name: lhafile
         buildsystem: simple
         build-commands:
-          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose --no-build-isolation ."
         sources:
           - type: archive
             url: https://github.com/FrodeSolheim/python-lhafile/archive/v0.2.2.tar.gz
@@ -106,7 +112,7 @@ modules:
       - name: urllib3
         buildsystem: simple
         build-commands:
-          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose --no-build-isolation ."
         sources:
           - type: archive
             url: https://github.com/urllib3/urllib3/archive/1.24.3.tar.gz
@@ -115,7 +121,7 @@ modules:
       - name: chardet
         buildsystem: simple
         build-commands:
-          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose --no-build-isolation ."
         sources:
           - type: archive
             url: https://github.com/chardet/chardet/archive/3.0.4.tar.gz
@@ -124,7 +130,7 @@ modules:
       - name: certifi
         buildsystem: simple
         build-commands:
-          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose --no-build-isolation ."
         sources:
           - type: archive
             url: https://github.com/certifi/python-certifi/archive/2019.06.16.tar.gz
@@ -133,7 +139,7 @@ modules:
       - name: idna
         buildsystem: simple
         build-commands:
-          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose ."
+          - "/usr/bin/pip3 --disable-pip-version-check install --prefix=/app --no-deps --verbose --no-build-isolation ."
         sources:
           - type: archive
             url: https://github.com/kjd/idna/archive/v2.8.tar.gz
